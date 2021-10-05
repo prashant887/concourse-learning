@@ -1,15 +1,15 @@
 resources:
-  - name: concourse-python-app
+  - name: concourse-learning
     type: git
     source:
       uri: https://github.com/prashant887/concourse-learning.git
       branch: dev-branch
-
-
 jobs:
 - name: job-concourse-complie
   public: true
   plan:
+  - get: concourse-learning
+    trigger: true
   - task: create-go-exe
     config:
       platform: linux
@@ -21,18 +21,12 @@ jobs:
       outputs:
       - name: exec-dir
       run:
-        dir: concourse-learning
+        #dir: concourse-learning
         path: sh
         args:
           - -exc
           -  |
-             pwd
-             echo "Before Compile"
-             ls -lrt *
-             go build concourse-complie/hello-word.go
-             echo "After Build"
-             ls -lrt
-             mv hello-word exec-dir/
+             go build -o exec-dir concourse-learning/concourse-complie/hello-word.go
 
   - task: exec-go-exec
     config:
@@ -48,6 +42,4 @@ jobs:
         args:
           - -exc
           - |
-            pwd
-            ls -lrt
             ./hello-word
