@@ -1,6 +1,7 @@
 resources:
   - name: concourse-learning
     type: git
+    icon: github
     source:
       uri: https://github.com/prashant887/concourse-learning.git
       branch: dev-branch
