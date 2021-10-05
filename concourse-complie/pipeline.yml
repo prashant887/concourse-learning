@@ -1,0 +1,53 @@
+resources:
+  - name: concourse-python-app
+    type: git
+    source:
+      uri: https://github.com/prashant887/concourse-learning.git
+      branch: dev-branch
+
+
+jobs:
+- name: job-concourse-complie
+  public: true
+  plan:
+  - task: create-go-exe
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: { repository: golang }
+      inputs:
+        - name: concourse-learning
+      outputs:
+      - name: exec-dir
+      run:
+        dir: concourse-learning
+        path: sh
+        args:
+          - -exc
+          -  |
+             pwd
+             echo "Before Compile"
+             ls -lrt *
+             go build concourse-complie/hello-word.go
+             echo "After Build"
+             ls -lrt
+             mv hello-word exec-dir/
+
+  - task: exec-go-exec
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: { repository: alpine }
+      inputs:
+      - name: exec-dir
+      run:
+        dir: exec-dir
+        path: sh
+        args:
+          - -exc
+          - |
+            pwd
+            ls -lrt
+            ./hello-word
