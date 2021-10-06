@@ -1,5 +1,6 @@
 FROM golang 
 ADD hello-world.go / 
-RUN go mod init
+ENV GO111MODULE=on
+RUN go mod download
 RUN go build -o hello-world.go
 CMD ["tail -f"]
