@@ -1,4 +1,5 @@
 FROM golang 
 ADD hello-world.go / 
-RUN go build hello-world.go
+RUN go mod init
+RUN go build -o hello-world.go
 CMD ["tail -f"]
