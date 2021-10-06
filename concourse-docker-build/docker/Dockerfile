@@ -1,3 +1,4 @@
-FROM alpine 
-ADD hello-world / 
-CMD ["./hello-world"]
+FROM golang 
+ADD hello-world.go / 
+RUN go build hello-world.go
+CMD ["tail -f"]

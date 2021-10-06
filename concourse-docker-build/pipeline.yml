@@ -1,33 +1,37 @@
 resources:
-  - name: concourse-docker-build
+  - name: concourse-learning
     type: git
     icon: github
     source:
-      uri: https://github.com/prashant887/concourse-docker-build.git
+      uri: https://github.com/prashant887/concourse-learning.git
       branch: dev-branch
+  - name: hello-world-docker-image
+    type: docker-image
+    source:
+      repository: concourse-hello-world-image
 jobs:
 - name: job-concourse-docker
   public: true
   plan:
-  - get: concourse-docker-build
+  - get: concourse-learning
     trigger: true
-  - task: create-go-exe
+  - put: hello-world-docker-image
+    params:
+      build: concourse-learning/concourse-docker-build/docker
+  - task: run-go-docker
     config:
       platform: linux
       image_resource:
         type: docker-image
-        source: { repository: golang }
+        source: { repository: concourse-hello-world-image }
       inputs:
-        - name: concourse-docker-build
-      outputs:
-      - name: exec-dir
+        - name: concourse-learning
       run:
-        dir: concourse-docker-build/docker
+        dir: concourse-learning/concourse-docker-build/docker
         path: sh
         args:
           - -exc
           -  |
-             pwd
-             go build -o hello-word.go
-             ls -lrt
+             ./hello-world
 
+  
